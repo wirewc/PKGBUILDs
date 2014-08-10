@@ -145,7 +145,7 @@ package_uboot-a20-olinuxino_micro() {
   cp a20-olinuxino_micro.env "${pkgdir}"/boot/uEnv.txt
 }
 
-package_uboot-a13-olinuxinom() {
+package_uboot-a13-olinuxino-micro() {
   pkgdesc="U-Boot for A13 OLinuXino Micro"
   install=${pkgbase}.install
   provides=('uboot-sunxi')
@@ -158,7 +158,7 @@ package_uboot-a13-olinuxinom() {
   cp a13-olinuxinom.env "${pkgdir}"/boot/uEnv.txt
 }
 
-package_uboot-a10s-olinuxino-m() {
+package_uboot-a10s-olinuxino-micro() {
   pkgdesc="U-Boot for A10s OLinuXino Micro"
   install=${pkgbase}.install
   provides=('uboot-sunxi')
@@ -172,7 +172,7 @@ package_uboot-a10s-olinuxino-m() {
 }
 
 
-package_uboot-a10s-olinuxino-m-lcd7() {
+package_uboot-a10s-olinuxino-micro-lcd7() {
   pkgdesc="U-Boot for A10s OLinuXino Micro with 7 inch LCD"
   install=${pkgbase}.install
   provides=('uboot-sunxi')
