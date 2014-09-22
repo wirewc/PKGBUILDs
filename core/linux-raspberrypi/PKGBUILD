@@ -4,11 +4,11 @@
 buildarch=18
 
 pkgbase=linux-raspberrypi
-_commit=b65f7df60146ce8513ce64b9d7acd4a026878ee5
+_commit=c256eb9968c8997dce47350d2075e42f1b3991d3
 _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi"
-pkgver=3.12.26
+pkgver=3.12.28
 pkgrel=2
 arch=('arm armv6h')
 url="http://www.kernel.org/"
@@ -22,8 +22,8 @@ source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
         'imagetool-uncompressed.py'
         "git://git.code.sf.net/p/aufs/aufs3-standalone#branch=aufs${pkgver%.*}.x")
 
-md5sums=('e03a4782c31237b19acc42e197d6c92e'
-         'bdcc7c965ca519e7305ba7a1866b906d'
+md5sums=('f04ac2f80ba2385fb2d819f08a869d3a'
+         '0c33fc99f011e7884a124a909f1de010'
          '9335d1263fd426215db69841a380ea26'
          'a00e424e2fbb8c5a5f77ba2c4871bed4'
          '2f82dbe5752af65ff409d737caf11954'
