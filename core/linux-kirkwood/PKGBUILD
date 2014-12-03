@@ -6,10 +6,10 @@ buildarch=2
 pkgbase=linux-kirkwood
 _kernelname=${pkgbase#linux}
 _desc="Marvell Kirkwood"
-pkgver=3.16.3
-pkgrel=2
+pkgver=3.17.4
+pkgrel=1
 cryptodev_commit=6aa62a2c320b04f55fdfe0ed015c3d9b48997239
-bfqver=v7r5
+bfqver=v7r6
 
 arch=('arm')
 url="http://www.kernel.org/"
@@ -30,17 +30,17 @@ source=("ftp://ftp.kernel.org/pub/linux/kernel/v3.x/linux-${pkgver}.tar.xz"
         "http://algo.ing.unimo.it/people/paolo/disk_sched/patches/${pkgver:0:4}.0-${bfqver}/0002-block-introduce-the-BFQ-${bfqver}-I-O-sched-for-${pkgver:0:4}.patch"
         "http://algo.ing.unimo.it/people/paolo/disk_sched/patches/${pkgver:0:4}.0-${bfqver}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-${bfqver}-for-${pkgver:0:4}.0.patch")
 
-md5sums=('96f1d5219534e89f7477960695093654'
-         '20c0aa36ce1a9c5ef082b2e2f56a0a22'
-         '090293a16fe8baab159e465b6a7c30e6'
-         'SKIP'
+md5sums=('ce49828adecf8908eb3a9ffc5b860d44'
+         'befe42f1bb735b5f89aebe1de94ad75d'
+         'd83c14d471736a5af9ac13587b7aa10b'
+         '20e5ad6015c1a51bb7ca3a31dfce055b'
          '9b5a265440abf57d2052838f31486a3a'
          '09d44b9f07abfaeaf4f688ee52034786'
          'SKIP'
          'ddf7876487c876f6676ef0e050e9d204'
-         '27b45e15c3f9855792808498af21f664'
-         '812c18775a53e337f1b2c7cd9078bff1'
-         'e903ed2c79546d2f0ec41e7e631c62f7')
+         '065dfb596e42d2c92a34936ae9e718cd'
+         'f5523479e045810acd2baf05f12f7b2c'
+         '0202585b76071b7ca1263515e2b4f23b')
 
 prepare() {
   cd "${srcdir}/linux-${pkgver}"
@@ -285,7 +285,6 @@ _package-headers() {
   # add xfs and shmem for aufs building
   mkdir -p "${pkgdir}/usr/src/linux-${_kernver}/fs/xfs"
   mkdir -p "${pkgdir}/usr/src/linux-${_kernver}/mm"
-  cp fs/xfs/xfs_sb.h "${pkgdir}/usr/src/linux-${_kernver}/fs/xfs/xfs_sb.h"
 
   # copy in Kconfig files
   for i in `find . -name "Kconfig*"`; do

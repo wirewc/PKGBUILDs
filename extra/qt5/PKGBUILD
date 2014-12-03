@@ -35,7 +35,7 @@ pkgname=('qt5-base'
          'qt5-x11extras'
          'qt5-xmlpatterns')
 pkgver=5.3.2
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url='http://qt-project.org/'
 license=('GPL3' 'LGPL' 'FDL' 'custom')
@@ -156,12 +156,7 @@ package_qt5-base() {
   pkgdesc='A cross-platform application and UI framework'
   depends=('libjpeg-turbo' 'xcb-util-keysyms' 'dbus' 'fontconfig' 'systemd'
            'xcb-util-wm' 'libxrender' 'libxi' 'sqlite' 'xcb-util-image' 'icu'
-           'qtchooser')
-
-  # On the Raspberry Pi, we don't need mesa-libgl and use broadcom's libs instead
-  # (see above in prepare())
-  test "$CARCH" != 'armv6h' && depends+=('libgl')
-
+           'qtchooser' 'libgl')
   optdepends=('postgresql-libs: PostgreSQL driver'
               'libmariadbclient: MariaDB driver'
               'unixodbc: ODBC driver'
@@ -495,6 +490,7 @@ package_qt5-tools() {
 package_qt5-webkit() {
   pkgdesc='Classes for a WebKit2 based implementation and a new QML API'
   depends=('qt5-sensors' 'qt5-location' 'gst-plugins-base' 'libxslt' 'libxcomposite')
+  optdepends=('gst-plugins-good: Webm codec support')
   license=('GPL3' 'LGPL' 'FDL')
 
   cd ${_pkgfqn}/qtwebkit
