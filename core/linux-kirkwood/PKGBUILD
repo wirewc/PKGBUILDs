@@ -1,15 +1,15 @@
-# Maintainer: Kevin Mihelich <kevin@plugapps.com>
-# Maintainer: Oleg Rakhmanov <orakhmanov@gmail.com>
+# Maintainer: Kevin Mihelich <kevin@archlinuxarm.org>
+# Maintainer: Oleg Rakhmanov <oleg@archlinuxarm.org>
 
 buildarch=2
 
 pkgbase=linux-kirkwood
 _kernelname=${pkgbase#linux}
 _desc="Marvell Kirkwood"
-pkgver=3.17.4
+pkgver=3.18.6
 pkgrel=2
 cryptodev_commit=6aa62a2c320b04f55fdfe0ed015c3d9b48997239
-bfqver=v7r6
+bfqver=v7r7
 
 arch=('arm')
 url="http://www.kernel.org/"
@@ -23,34 +23,31 @@ source=("ftp://ftp.kernel.org/pub/linux/kernel/v3.x/linux-${pkgver}.tar.xz"
         'mach-types::http://www.arm.linux.org.uk/developer/machines/download.php'
         'usb-add-reset-resume-quirk-for-several-webcams.patch'
 	'0001-disable-mv643xx_eth-TSO.patch'
-        #"git://git.code.sf.net/p/aufs/aufs3-standalone#branch=aufs3.x-rcN"
-        "git://git.code.sf.net/p/aufs/aufs3-standalone#branch=aufs${pkgver:0:4}"
-        'cryptodev.tar.gz::https://github.com/cryptodev-linux/cryptodev-linux/archive/${cryptodev_commit}.tar.gz'
-        "http://algo.ing.unimo.it/people/paolo/disk_sched/patches/${pkgver:0:4}.0-${bfqver}/0001-block-cgroups-kconfig-build-bits-for-BFQ-${bfqver}-${pkgver:0:4}.patch"
-        "http://algo.ing.unimo.it/people/paolo/disk_sched/patches/${pkgver:0:4}.0-${bfqver}/0002-block-introduce-the-BFQ-${bfqver}-I-O-sched-for-${pkgver:0:4}.patch"
-        "http://algo.ing.unimo.it/people/paolo/disk_sched/patches/${pkgver:0:4}.0-${bfqver}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-${bfqver}-for-${pkgver:0:4}.0.patch")
+#        "git://git.code.sf.net/p/aufs/aufs3-standalone#branch=aufs3.x-rcN"
+        "git://git.code.sf.net/p/aufs/aufs3-standalone#branch=aufs${pkgver:0:4}.1+"
+        "cryptodev.tar.gz::https://github.com/cryptodev-linux/cryptodev-linux/archive/${cryptodev_commit}.tar.gz"
+        "ftp://teambelgium.net/bfq/patches/${pkgver:0:4}.0-${bfqver}/0001-block-cgroups-kconfig-build-bits-for-BFQ-${bfqver}-${pkgver:0:4}.patch"
+        "ftp://teambelgium.net/bfq/patches/${pkgver:0:4}.0-${bfqver}/0002-block-introduce-the-BFQ-${bfqver}-I-O-sched-for-${pkgver:0:4}.patch"
+        "ftp://teambelgium.net/bfq/patches/${pkgver:0:4}.0-${bfqver}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-${bfqver}-for-${pkgver:0:4}.0.patch")
 
-md5sums=('ce49828adecf8908eb3a9ffc5b860d44'
-         'befe42f1bb735b5f89aebe1de94ad75d'
-         '46968196ad6cbd5a0dfd01fc9255738d'
+md5sums=('997c8492ebfdc9bb9e6ed8d4945539dd'
+         'adae431c969e3fcf32aa8c315c96e02a'
+         'fad0103ae663d6bacb922628f6d26fa7'
          'df25fccf87d246f97dac2843e22debe6'
          '9b5a265440abf57d2052838f31486a3a'
          '09d44b9f07abfaeaf4f688ee52034786'
          'SKIP'
          'ddf7876487c876f6676ef0e050e9d204'
-         '065dfb596e42d2c92a34936ae9e718cd'
-         'f5523479e045810acd2baf05f12f7b2c'
-         '0202585b76071b7ca1263515e2b4f23b')
+         '1c7c2d0338939a9e6953a64d80861471'
+         'a81346cce95baeac2c56cf60d3c7e5b6'
+         '8f2743651280f5a022e541f4e95e5546')
 
 prepare() {
   cd "${srcdir}/linux-${pkgver}"
 
 msg2 "Copying aufs3 patches into the kernel source tree"
-
-  cp -ru "${srcdir}/aufs3-standalone/Documentation" "${srcdir}/linux-${pkgver}/"
-  cp -ru "${srcdir}/aufs3-standalone/fs" "${srcdir}/linux-${pkgver}/"
-  cp -ru "${srcdir}/aufs3-standalone/include/uapi/linux/aufs_type.h" "${srcdir}/linux-${pkgver}/include/linux/"
-  cp -ru "${srcdir}/aufs3-standalone/include/uapi/linux/aufs_type.h" "${srcdir}/linux-${pkgver}/include/uapi/linux/"
+  cp -ru "${srcdir}/aufs3-standalone/"{Documentation,fs} "${srcdir}/linux-${pkgver}/"
+  cp -ru "${srcdir}/aufs3-standalone/include/uapi/linux/aufs_type.h" "${srcdir}/linux-${pkgver}/include/"{linux/,uapi/linux/}
 
 msg2 "Applying aufs3 patches"
   patch -Np1 -i ../aufs3-standalone/aufs3-kbuild.patch

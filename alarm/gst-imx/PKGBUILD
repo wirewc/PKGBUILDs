@@ -3,9 +3,9 @@
 buildarch=4
 
 pkgname=gst-imx
-_commit=27be21f07074f70df9c8e1a94cc44caffa5ff712
-pkgver=0.9.9
-pkgrel=8
+_commit=0a7330439cec5e3bb955828a1fc8b7fe55d0d8e3
+pkgver=0.10.0
+pkgrel=6
 pkgdesc="GStreamer plugins for i.MX platforms"
 arch=('armv7h')
 license=('LGPL')
@@ -13,7 +13,7 @@ url="https://github.com/Freescale/gstreamer-imx"
 depends=('gst-plugins-base-libs' 'libfslvpuwrap' 'gpu-viv-bin-mx6q-fb')
 makedepends=('python2' 'linux-headers-imx6-fsl')
 source=("https://github.com/Freescale/gstreamer-imx/archive/${_commit}.tar.gz")
-md5sums=('ae1c3caf336b8874fb046abaa4388b50')
+md5sums=('643ceb9d45db45cf58f3f7622d881cbb')
 
 LDFLAGS+=' -L/opt/fsl/lib'
 CPPFLAGS+=' -I/opt/fsl/include'

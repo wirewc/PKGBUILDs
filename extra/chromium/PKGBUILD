@@ -21,7 +21,7 @@
 buildarch=4
 
 pkgname=chromium
-pkgver=39.0.2171.71
+pkgver=40.0.2214.111
 pkgrel=1
 pkgdesc="The open-source project behind Google Chrome, an attempt at creating a safer, faster, and more stable browser"
 arch=('armv6h' 'armv7h')
@@ -48,15 +48,17 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/$pkgn
         arm-webrtc-fix.patch
         chromium-arm-r0.patch
         skia.patch
-        v6-ffmpeg.patch)
-sha256sums=('b7597ce853528861d14a281f847cd5335cdce09984e42701e9b5f3bfe21fd190'
+        v6-ffmpeg.patch
+        chromium-webkit-buffer-overflow.patch)
+sha256sums=('9e1f1a661702217a3fa7bf25a0e70d334a236ca67fadc4bebcfa2e8f7328cd49'
             '09bfac44104f4ccda4c228053f689c947b3e97da9a4ab6fa34ce061ee83d0322'
             '478340d5760a9bd6c549e19b1b5d1c5b4933ebf5f8cfb2b3e2d70d07443fe232'
             '4999fded897af692f4974f0a3e3bbb215193519918a1fa9b31ed51e74a2dccb9'
             '9db0f01517c52e3236ff52e8a664840542a19144a54923ae6aabea3dcfa92c52'
             'df4be49770d508b772f98eda9fc5f37fa71d4c0459437e12f7f3db5892aa1611'
             'd53c0af6636611ee190083361d100cbbdc18515d94f59c2750da121022554226'
-            '3fbabcbd512494b529e0a0e17560735887acf2291a74653750f9b29f5d45774d')
+            '3fbabcbd512494b529e0a0e17560735887acf2291a74653750f9b29f5d45774d'
+            '870ca4516a0a5407b1e2da822a1ca4f201349c8699877f6bd248cd8e08e7f2f1')
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
@@ -84,6 +86,10 @@ prepare() {
   # https://groups.google.com/a/chromium.org/d/topic/chromium-packagers/BNGvJc08B6Q
   find third_party/icu -type f \! -regex '.*\.\(gyp\|gypi\|isolate\)' -delete
 
+  # Fix a buffer overflow in blink::HarfBuzzShaper::resolveCandidateRuns()
+  # https://code.google.com/p/chromium/issues/detail?id=445075#c10
+  patch -d third_party/WebKit -Np1 <../chromium-webkit-buffer-overflow.patch
+
   MAKEFLAGS=-j4
 
   # Use Python 2
@@ -98,6 +104,8 @@ build() {
   cd "$srcdir/$pkgname-$pkgver"
 
   export PATH="$srcdir/python2-path:$PATH"
+
+  CFLAGS=`echo $CFLAGS | sed -e 's/vfpv3-d16/neon/'` && CXXFLAGS="$CFLAGS"
 
   # CFLAGS are passed through release_extra_cflags below
   export -n CFLAGS CXXFLAGS
@@ -115,7 +123,7 @@ fi
 if [ "$CARCH" == "armv7h" ]; then
 arch_specific_flags="
     -Darmv7=1 \
-    -Darm_fpu=vfpv3-d16"
+    -Darm_fpu=neon"
 fi
 
   local _chromium_conf=(
@@ -160,7 +168,7 @@ fi
     -Ddisable_glibc=1
     -Ddisable_sse2=1
     -Dtarget_arch=arm
-    -Darm_neon=0
+    -Darm_neon=1
     -Dlogging_like_official_build=1
     -Ddisable_nacl=1
     -Ddisable_pnacl=1
