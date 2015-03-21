@@ -4,12 +4,12 @@
 buildarch=4
 
 pkgbase=linux-armv7
-_srcname=linux-3.18
+_srcname=linux-3.19
 _kernelname=${pkgbase#linux}
 _desc="ARMv7 multi-platform"
-pkgver=3.18.5
+pkgver=3.19.2
 pkgrel=1
-rcnrel=armv7-x2
+rcnrel=armv7-x3
 arch=('armv7h')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -17,27 +17,29 @@ makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools')
 options=('!strip')
 source=("http://www.kernel.org/pub/linux/kernel/v3.x/${_srcname}.tar.xz"
         "http://www.kernel.org/pub/linux/kernel/v3.x/patch-${pkgver}.xz"
-        "http://rcn-ee.net/deb/sid-armhf/v${pkgver}-${rcnrel}/patch-${pkgver%.0}-${rcnrel}.diff.gz"
-        "git://git.code.sf.net/p/aufs/aufs3-standalone#branch=aufs${pkgver%.*}.1+" # 3.18.1+
+        "http://rcn-ee.com/deb/sid-armhf/v${pkgver}-${rcnrel}/patch-${pkgver%.0}-${rcnrel}.diff.gz"
+        "git://git.code.sf.net/p/aufs/aufs3-standalone#branch=aufs${pkgver%.*}"
         #"git://git.code.sf.net/p/aufs/aufs3-standalone#branch=aufs3.x-rcN"
         '0001-ARM-atags-add-support-for-Marvell-s-u-boot.patch'
         '0002-ARM-atags-fdt-retrieve-MAC-addresses-from-Marvell-bo.patch'
         '0003-SMILE-Plug-device-tree-file.patch'
         '0004-fix-mvsdio-eMMC-timing.patch'
-        '0005-mmc-mvsdio-Work-around-broken-TX-DMA.patch'
-        '0006-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch'
+        '0005-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch'
+        '0006-USB-armory-support.patch'
+        '0007-ARM-TLV320AIC23-SoC-Audio-Codec-Fix-errors-reported-.patch'
         'config')
-md5sums=('9e854df51ca3fef8bfe566dbd7b89241'
-         'e8563b2feaa6c33d20d23ac7add9d385'
-         'ce78a6ce1c1b75c423d942ee71df0f7f'
+md5sums=('d3fc8316d4d4d04b65cbc2d70799e763'
+         '6f7128647a2fc0912958ac1cbf96a95a'
+         'd06782a0fe457e026abe999bf1b62a6a'
          'SKIP'
-         '877449857f711e8f880fb023a9285641'
-         '201c4c6ba7d459c4617c7bd30ea2c5b4'
-         '65cddba7c44de41e59c68ccb13f93cbc'
-         'e2ea54e5ab30266a15beba5222792a18'
-         '246bd40b4b57fd490465e70f6ea711b9'
-         '8a37d76eee241f62f99415a7e14b5c2f'
-         '7edd5c951ff921a77e5c5e120044ee50')
+         '616f5072a75f10d0472593526f8ff638'
+         '7eabe6c4c26ec7a338a57381501a2aaa'
+         '4022216b4700cad92f5a6b3a31986bac'
+         'ab7f27a5502e82a70e1e0f5b2529d2cd'
+         '12e6b2c717989fba8501265a55039e30'
+         'c7c3bb2e9db362fd46563c8ef857846e'
+         'cfc14490dc23d41322dc67a5583ff15d'
+         '886eeadf9cbdc27e85608cc3b472987d')
 
 prepare() {
   cd "${srcdir}/${_srcname}"
@@ -53,8 +55,9 @@ prepare() {
   git apply ../0002-ARM-atags-fdt-retrieve-MAC-addresses-from-Marvell-bo.patch
   git apply ../0003-SMILE-Plug-device-tree-file.patch
   git apply ../0004-fix-mvsdio-eMMC-timing.patch
-  git apply ../0005-mmc-mvsdio-Work-around-broken-TX-DMA.patch
-  git apply ../0006-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch
+  git apply ../0005-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch
+  git apply ../0006-USB-armory-support.patch
+  git apply ../0007-ARM-TLV320AIC23-SoC-Audio-Codec-Fix-errors-reported-.patch
 
   # AUFS patches
   cp -ru "${srcdir}/aufs3-standalone/Documentation" .
@@ -62,10 +65,10 @@ prepare() {
   cp -ru "${srcdir}/aufs3-standalone/include/uapi/linux/aufs_type.h" ./include/linux
   cp -ru "${srcdir}/aufs3-standalone/include/uapi/linux/aufs_type.h" ./include/uapi/linux
 
-  patch -p1 -i ../aufs3-standalone/aufs3-kbuild.patch
-  patch -p1 -i ../aufs3-standalone/aufs3-base.patch
-  patch -p1 -i ../aufs3-standalone/aufs3-mmap.patch
-  patch -p1 -i ../aufs3-standalone/aufs3-standalone.patch
+  git apply ../aufs3-standalone/aufs3-kbuild.patch
+  git apply ../aufs3-standalone/aufs3-base.patch
+  git apply ../aufs3-standalone/aufs3-mmap.patch
+  git apply ../aufs3-standalone/aufs3-standalone.patch
 
   cat "${srcdir}/config" > ./.config
 
