@@ -4,12 +4,12 @@
 buildarch=4
 
 pkgbase=linux-odroid-c1
-_commit=ff3b46e6e01c6daf4d82e65a90c7ee736d2f78da
+_commit=103250bf0315e891eaf6d5808268a9b964be6d99
 _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="ODROID-C1"
-pkgver=3.10.72
-pkgrel=1
+pkgver=3.10.73
+pkgrel=2
 arch=('armv7h')
 url="https://github.com/hardkernel/linux"
 license=('GPL2')
@@ -21,9 +21,9 @@ source=("https://github.com/hardkernel/linux/archive/${_commit}.tar.gz"
         'amlogic.service'
         '0001-dirty-status-led-active-low-hack.patch'
         '0002-remove-backports-cflags.patch')
-md5sums=('d4e3290d6f7754568dbaab133a4ac4f6'
+md5sums=('6e0069aaad881b2181651f64859a78c1'
          'SKIP'
-         'e51be8a473bfe68ee888c8a5460d3361'
+         '4d625bc2d4b4315543edf7b02b2ab869'
          'b8956789318f49cec5b8bb0b41654a9b'
          '1d2f1d042ebe8b49a85b6ceab9dc0dd4'
          'b2014d69ffa477f23d3a311a621a6bdc')
