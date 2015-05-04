@@ -7,11 +7,11 @@
 buildarch=20
 
 pkgbase=linux-raspberrypi
-_commit=8362c08dfc8dd9e54745b3f1e5e4ff0a1fb30614
+_commit=2747cc0bde4ca441691260fae1e34c9ef954ccae
 _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="Raspberry Pi"
-pkgver=3.18.11
+pkgver=3.18.12
 pkgrel=1
 bfqver=v7r7
 arch=('armv6h' 'armv7h')
@@ -30,16 +30,16 @@ source=("https://github.com/raspberrypi/linux/archive/${_commit}.tar.gz"
         'cmdline.txt'
         'config.v6'
         'config.v7')
-md5sums=('5aa4a4bdc4c9f0f9750be9538dc31d30'
+md5sums=('0a6016a185b63dbb9f86ac7ed287e42b'
          'SKIP'
          '1c7c2d0338939a9e6953a64d80861471'
          'a81346cce95baeac2c56cf60d3c7e5b6'
          '8f2743651280f5a022e541f4e95e5546'
          '69d50a4604a587ae770e4be244e293bd'
-         '02bdc293e3fefe067a0aae2635c3220b'
+         '9a3c82da627b317ec79c37fd6afba569'
          '60bc3624123c183305677097bcd56212'
-         'acfc869522fd9078a4e1e471183a4391'
-         '256010462a4daf24c17300989e0294bb')
+         '6391234a492a59542e0935b50a6f15ff'
+         'bec43268d31db4d6e214fea34bb4319f')
 
 prepare() {
   cd "${srcdir}/${_srcname}"
