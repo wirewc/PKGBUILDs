@@ -4,10 +4,10 @@
 buildarch=4
 
 pkgbase=linux-armv7
-_srcname=linux-4.0
+_srcname=linux-4.1
 _kernelname=${pkgbase#linux}
 _desc="ARMv7 multi-platform"
-pkgver=4.0.1
+pkgver=4.1.3
 pkgrel=1
 rcnrel=armv7-x2
 arch=('armv7h')
@@ -26,18 +26,22 @@ source=("http://www.kernel.org/pub/linux/kernel/v4.x/${_srcname}.tar.xz"
         '0004-fix-mvsdio-eMMC-timing.patch'
         '0005-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch'
         '0006-ARM-TLV320AIC23-SoC-Audio-Codec-Fix-errors-reported-.patch'
+        '0007-set-default-cubietruck-led-triggers.patch'
+        '0008-USB-armory-support.patch'
         'config')
-md5sums=('a86916bd12798220da9eb4a1eec3616d'
-         '80f12ad5146991a83bb35ab141c24f81'
-         '422efad7277f392c36ce67b38142d9dc'
+md5sums=('fe9dc0f6729f36400ea81aa41d614c37'
+         '6a388f552b05243ae4165735da839e24'
+         '3cca5c96b1520f96ce13b757f4e73065'
          'SKIP'
-         'ae06c5772832d351d49b8ac0fe4a9ce2'
-         '7057519a84b74c1a4ec4981396edd845'
-         '1ce8c458126bfaf005366bc2e70ad866'
-         '90911aad404f80fcf81488da57bf2906'
-         '1a9033f9bd00f5397ba5ce5bdc842220'
-         '648459624ebad128af1faa55a29d0e7d'
-         'ea6b4be069cdb8dc8fdae82113666de8')
+         'db7c0ff1f385725f3e0683b0f544db6b'
+         'ad71eb3cdf4fa9b1b292017af32cbf79'
+         '5f549866a22ba1ebe1476c4f2800a1fe'
+         '3c99f777fa383198887cba84b768efe7'
+         '95895bca7fad74be10216eb293026f5e'
+         'aa5fc5a2efb2d122c6dbd49fb9356e2e'
+         '996623b310630e6471329f304167834c'
+         '8a5f87a89b4d0f9a7c93d762670e7342'
+         '756ed626eee70c33aeddff416176872d')
 
 prepare() {
   cd "${srcdir}/${_srcname}"
@@ -55,6 +59,8 @@ prepare() {
   git apply ../0004-fix-mvsdio-eMMC-timing.patch
   git apply ../0005-net-smsc95xx-Allow-mac-address-to-be-set-as-a-parame.patch
   git apply ../0006-ARM-TLV320AIC23-SoC-Audio-Codec-Fix-errors-reported-.patch
+  git apply ../0007-set-default-cubietruck-led-triggers.patch
+  git apply ../0008-USB-armory-support.patch
 
   # AUFS patches
   cp -ru "${srcdir}/aufs4-standalone/Documentation" .
@@ -112,7 +118,7 @@ _package() {
   optdepends=('crda: to set the correct wireless channels of your country')
   provides=('kernel26' "linux=${pkgver}" 'aufs_friendly')
   conflicts=('linux')
-  replaces=('linux-mvebu' 'linux-udoo')
+  replaces=('linux-mvebu' 'linux-udoo' 'linux-sun4i' 'linux-sun5i' 'linux-sun7i' 'linux-usbarmory')
   install=${pkgname}.install
 
   cd "${srcdir}/${_srcname}"
@@ -159,7 +165,7 @@ _package-headers() {
   pkgdesc="Header files and scripts for building modules for linux kernel - ${_desc}"
   provides=("linux-headers=${pkgver}")
   conflicts=('linux-headers')
-  replaces=('linux-mvebu-headers')
+  replaces=('linux-mvebu-headers' 'linux-sun4i-headers' 'linux-sun5i-headers' 'linux-sun7i-headers' 'linux-usbarmory-headers')
 
   install -dm755 "${pkgdir}/usr/lib/modules/${_kernver}"
 

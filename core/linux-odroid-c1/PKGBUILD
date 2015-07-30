@@ -4,12 +4,12 @@
 buildarch=4
 
 pkgbase=linux-odroid-c1
-_commit=a7614398199a077cdfe1e4ba821510c05ca847ce
+_commit=12a7d0aa504d9fc65d3d6aab6b46d0a7e78a264f
 _srcname=linux-${_commit}
 _kernelname=${pkgbase#linux}
 _desc="ODROID-C1"
-pkgver=3.10.75
-pkgrel=1
+pkgver=3.10.80
+pkgrel=8
 arch=('armv7h')
 url="https://github.com/hardkernel/linux"
 license=('GPL2')
@@ -17,24 +17,21 @@ makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools')
 options=('!strip')
 source=("https://github.com/hardkernel/linux/archive/${_commit}.tar.gz"
         "git+https://github.com/mdrjr/c1_bootini.git"
+        '0001-gcc-5.1-fix-for-mac-address.patch'
         'config'
-        'amlogic.service'
-        '0001-dirty-status-led-active-low-hack.patch'
-        '0002-remove-backports-cflags.patch')
-md5sums=('340c7bc94dae3520c31f736e3026915c'
+        'amlogic.service')
+md5sums=('1511ab74b9a47fdda8beacc1ed0079c7'
          'SKIP'
-         '8ff180b30507b796ac139ca395a0cfd7'
-         'b8956789318f49cec5b8bb0b41654a9b'
-         '1d2f1d042ebe8b49a85b6ceab9dc0dd4'
-         'b2014d69ffa477f23d3a311a621a6bdc')
+         '31b78a5c8c50bae59d62b11f53e14642'
+         '404935ca57b8c36158430954dd8eca99'
+         'b8956789318f49cec5b8bb0b41654a9b')
 
 prepare() {
   cd "${srcdir}/${_srcname}"
 
-  cat "${srcdir}/config" > ./.config
+  git apply ../0001-gcc-5.1-fix-for-mac-address.patch
 
-  git apply ../0001-dirty-status-led-active-low-hack.patch
-  git apply ../0002-remove-backports-cflags.patch
+  cat "${srcdir}/config" > ./.config
 
   # add pkgrel to extraversion
   sed -ri "s|^(EXTRAVERSION =)(.*)|\1 \2-${pkgrel}|" Makefile

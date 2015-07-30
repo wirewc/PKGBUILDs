@@ -4,10 +4,11 @@
 
 # ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
 #  - remove numactl from depends, doesn't build on ARM
+#  - drop ceph depend until it builds
 
 pkgname=libvirt
-pkgver=1.2.15
-pkgrel=1
+pkgver=1.2.17
+pkgrel=2
 pkgdesc="API for controlling virtualization engines (openvz,kvm,qemu,virtualbox,xen,etc)"
 arch=('i686' 'x86_64')
 url="http://libvirt.org/"
@@ -66,7 +67,7 @@ source=("http://libvirt.org/sources/$pkgname-$pkgver.tar.gz"
 	libvirtd.conf.d
 	libvirtd-guests.conf.d
 	libvirt.tmpfiles.d)
-md5sums=('08c2ea825d076ee67b1bbc600c220b97'
+md5sums=('a1f49050223be3cbd7678c32b1ee2756'
          '5e31269067dbd12ca871234450bb66bb'
          '384fff96c6248d4f020f6fa66c32b357'
          '020971887442ebbf1b6949e031c8dd3f')
@@ -114,8 +115,12 @@ package() {
   install -D -m644 "$srcdir"/libvirtd-guests.conf.d "$pkgdir"/etc/conf.d/libvirt-guests
   install -D -m644 "$srcdir"/libvirt.tmpfiles.d "$pkgdir"/usr/lib/tmpfiles.d/libvirt.conf
 
-  chown -R 0:78 $pkgdir/var/lib/libvirt/qemu
-  chmod 0770 $pkgdir/var/lib/libvirt/qemu
+  chown -R 0:78 "$pkgdir"/var/lib/libvirt/qemu
+  chmod 0770 "$pkgdir"/var/lib/libvirt/qemu
+
+  # FS#45252
+  chown polkitd "$pkgdir"/usr/share/polkit-1/rules.d
+  chmod 0700 "$pkgdir"/usr/share/polkit-1/rules.d
 
   rm -rf \
 	"$pkgdir"/var/run \

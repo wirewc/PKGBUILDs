@@ -8,9 +8,9 @@ _prefix=/usr
 
 pkgbase=kodi-rbp-git
 pkgname=('kodi-rbp-git' 'kodi-rbp-git-eventclients')
-pkgver=15.20150330
+pkgver=15.20150720
 
-_commit=e826779451fdcb865f6a66cc092e17d6ec5f2d6e
+_commit=0aa930b54834a41a7708094b2d2824dcfc9bc684
 pkgrel=2
 pkgdesc="A software media player and entertainment hub for digital media for the Raspberry Pi"
 arch=('armv6h' 'armv7h')
@@ -27,7 +27,7 @@ source=("kodi-${_commit}.tar.gz::https://github.com/xbmc/xbmc/archive/${_commit}
         'kodi.service'
         'polkit.rules')
 
-sha256sums=('9302b3cc9eb72f4e17e7a44a46d2ae739937fcf1bbe52f0408da8b6c974b8756'
+sha256sums=('7fd4dc89f80f6fd95fce883be78cd46b13ba02e0c97332659ad7d4a64584adf3'
             '5235068d5800d69f0287087815990e7fe8d6572733d60c8800546d35f608e87f'
             '9ea592205023ba861603d74b63cdb73126c56372a366dc4cb7beb379073cbb96')
 prepare() {
@@ -67,7 +67,6 @@ build() {
   --disable-gl \
   --enable-gles \
   --disable-x11 \
-  --disable-sdl \
   --enable-optimizations \
   --disable-goom \
   --disable-pulse \

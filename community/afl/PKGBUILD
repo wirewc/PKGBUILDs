@@ -1,0 +1,35 @@
+# Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Contributor: spider-mario <spidermario@free.fr>
+
+# ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
+#  - make with AFL_NOX86=1
+
+pkgname=afl
+pkgver=1.84b
+pkgrel=1
+pkgdesc='Security-oriented fuzzer using compile-time instrumentation and genetic algorithms'
+arch=('i686' 'x86_64')
+url="http://lcamtuf.coredump.cx/afl/"
+license=('Apache')
+depends=('glibc' 'bash')
+optdepends=(
+  'gcc: gcc instrumentation support'
+  'clang: clang instrumentation support'
+)
+provides=('american-fuzzy-lop')
+replaces=('american-fuzzy-lop')
+options=('!emptydirs' '!strip')
+source=(${pkgname}-${pkgver}.tgz::http://lcamtuf.coredump.cx/${pkgname}/releases/${pkgname}-${pkgver}.tgz)
+sha512sums=('281b7de49e61d0c947419a1e96c4e582057160905eebfd4f485ef51e8b8a7583d4bfe4d9ad749dfca4b082d08c8d32de1e43b5e5fd7211c37326c15848651887')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  make PREFIX=/usr AFL_NOX86=1
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  make PREFIX=/usr AFL_NOX86=1 DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=2 sw=2 et:
