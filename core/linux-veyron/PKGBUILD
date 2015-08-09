@@ -7,8 +7,8 @@ pkgbase=linux-veyron
 _kernelname=${pkgbase#linux}
 _desc="Veyron Chromebooks"
 pkgver=3.14.0
-pkgrel=8
-_commit=6e6a92b14a6298d4ccca36cf664b31a17039dd88
+pkgrel=10
+_commit=6094ec4d1c922be753c08629c9d3595df4e30eb9
 arch=('armv7h')
 url="https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.14"
 license=('GPL2')
@@ -33,10 +33,10 @@ md5sums=('SKIP'
          '5e2d7cd74de07d13052de99411c13a2f'
          '1534c1dbfe5df35a5634072f7b912840'
          '20f8931f3795e5226829d48c3d470334'
-         'c052528d853e04cfe40f90ec681bac53'
-         '7c505a86de18e42158dbdfc146e2cee7'
-         '16072b50894af1550d3d767259f0f98c'
-         'e4d12c67b4c14cd9431887a6a7792547'
+         'b98041ace0b7537058ba9095406bbcfc'
+         'a4ed8eff558abe5bea1eda89cdda2526'
+         '1c666a868a11e8b799723673772079f4'
+         'a04ae86c479589d5b638b26d9f6c5a8e'
          'd3d0d08037ec930c4e2b4c53dce7ddb1'
          '1d77c34a9c759a7f54df718cd80de567'
          '61c5ff73c136ed07a7aadbf58db3d96a'
