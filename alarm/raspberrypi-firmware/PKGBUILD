@@ -6,9 +6,9 @@ pkgname=('raspberrypi-firmware'
          'raspberrypi-firmware-bootloader-x'
          'raspberrypi-firmware-tools'
          'raspberrypi-firmware-examples')
-pkgver=20150806
+pkgver=20160412
 pkgrel=1
-_commit=11eaffc2bbb61c6911ffa05b80694f9f7d91915c
+_commit=efdcf1683e7c696e53fa28ab13c973cb32f09792
 pkgdesc="Firmware files for Raspberry Pi"
 arch=('any')
 url="https://github.com/raspberrypi/firmware"
@@ -16,7 +16,7 @@ makedepends=('git')
 license=('custom')
 options=(!strip)
 source=("https://github.com/raspberrypi/firmware/archive/${_commit}.tar.gz")
-md5sums=('df5e7db59f1f5e3a85c66b65d2ca929e')
+md5sums=('d351838e662e6e231a5174bad5972307')
 
 package_raspberrypi-firmware() {
   depends=('raspberrypi-firmware-bootloader'
@@ -28,9 +28,8 @@ package_raspberrypi-firmware() {
 package_raspberrypi-firmware-bootloader() {
   pkgdesc="Bootloader files for Raspberry Pi"
 
-  mkdir -p "${pkgdir}"/boot/overlays
+  mkdir -p "${pkgdir}"/boot
   cp "${srcdir}"/firmware-${_commit}/boot/{*.dat,*.bin,*.elf} "${pkgdir}"/boot
-  cp "${srcdir}"/firmware-${_commit}/boot/overlays/README "${pkgdir}"/boot/overlays
   rm "${pkgdir}"/boot/{start_x.elf,fixup_x.dat}
 }
 

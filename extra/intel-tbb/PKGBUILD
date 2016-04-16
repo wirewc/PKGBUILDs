@@ -3,33 +3,36 @@
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 # Contributor: Denis Martinez <deuns.martinez AT gmail.com>
 
-# ALARM: Romain Reignier <rom.reignier AT gmail.com>
-# - add armv7h architecture
-# - add specfic CXXFLAGS for armv7h
+# ALARM: Kevin Mihelich <kevin@archlinuxarm.org>
+#        Romain Reignier <rom.reignier AT gmail.com>
+# - add specfic CXXFLAGS for armv7h and aarch64
 
-buildarch=4
+buildarch=12
 
 pkgname=intel-tbb
-pkgver=4.3_20150611
+pkgver=4.4_20160128
+_tag=tbb${pkgver/\./}oss
+_file=${_tag}_src_0.tgz
 pkgrel=1
 pkgdesc='High level abstract threading library'
-arch=('i686' 'x86_64')
+arch=(i686 x86_64)
 url='http://www.threadingbuildingblocks.org/'
-license=('GPL')
-depends=('gcc-libs')
-source=("http://threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb${pkgver/\./}oss_src.tgz")
-sha1sums=('5457cd15ad13625442283e67844199a79e88a3a4')
+license=(GPL)
+depends=(gcc-libs)
+source=(http://threadingbuildingblocks.org/sites/default/files/software_releases/source/$_file)
+sha1sums=('80707e277f69d9b20eeebdd7a5f5331137868ce1')
 
 build() {
-  cd tbb${pkgver/\./}oss
-  CXXFLAGS+=" -DTBB_USE_GCC_BUILTINS=1 -D__TBB_64BIT_ATOMICS=0"
+  cd $_tag
+  [[ $CARCH == "armv7h" ]] && CXXFLAGS+=" -DTBB_USE_GCC_BUILTINS=1 -D__TBB_64BIT_ATOMICS=0"
+  [[ $CARCH == "aarch64" ]] && CXXFLAGS+=" -DTBB_USE_GCC_BUILTINS=1 -D__TBB_64BIT_ATOMICS=1"
   make
 }
 
 package() {
-  cd tbb${pkgver/\./}oss
-  install -d "${pkgdir}"/usr/lib
-  install -m755 build/linux_*/*.so* "${pkgdir}"/usr/lib
-  install -d "${pkgdir}"/usr/include
-  cp -a include/tbb "${pkgdir}"/usr/include
+  cd $_tag
+  install -d "$pkgdir"/usr/lib
+  install -m755 build/linux_*/*.so* "$pkgdir"/usr/lib
+  install -d "$pkgdir"/usr/include
+  cp -a include/tbb "$pkgdir"/usr/include
 }

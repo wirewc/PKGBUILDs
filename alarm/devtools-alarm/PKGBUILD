@@ -6,7 +6,7 @@
 
 pkgname=devtools-alarm
 _pkgname=devtools
-pkgver=20150228
+pkgver=20151129
 pkgrel=1
 pkgdesc='Tools for Arch Linux ARM package maintainers'
 arch=('any')
@@ -22,13 +22,13 @@ source=("https://sources.archlinux.org/other/$_pkgname/$_pkgname-$pkgver.tar.gz"
         '0004-arch-nspawn-arm-fix.patch'
         '0005-makechrootpkg-no-default-logging.patch'
         '0006-archbuild-no-setarch.patch')
-md5sums=('4b17a83dac3f8c93de85acebd0a90a16'
-         '9e70b777886ec0af1a787b32c7444ed8'
-         'd6ff97c5dcc0cbfbe65ec3cc3ae495f7'
-         '9bb4797d676a56437a5ed130ce202e68'
-         '14c261c1d0139888a2fb10cb9bbfda37'
-         '2af8e8b30dbc22d5a0f3ddfcaecf64fa'
-         '97ed4af62c8020fe6f7f991f930fb68e')
+md5sums=('86fe057b7180ce0247338e64f1a8722c'
+         '755e80123ab9d6afc8bb392b9e41a5fc'
+         '85a94eb74f123d420cc16db1edacd10f'
+         '8a778d0f0ec93340c0ecd98df8e38527'
+         'adf75517838b4fdbbc3199ea2049fa73'
+         '29ca8fac5cf40b5f2b83a16b9eb968f8'
+         '9182e6ab4f3ed7a60d9263e839c0d71a')
 
 prepare() {
 	cd "${_pkgname}-${pkgver}"

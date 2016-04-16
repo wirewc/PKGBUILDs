@@ -11,23 +11,24 @@
 #  - drop valgrind optdepend
 
 pkgname=qtcreator
-pkgver=3.4.2
-_pkgver=v3.4.2
-pkgrel=1
+pkgver=3.6.1
+_pkgver=v3.6.1
+pkgrel=2
 pkgdesc='Lightweight, cross-platform integrated development environment'
 arch=('i686' 'x86_64')
 url='http://qt-project.org'
 license=('LGPL')
-depends=('qt5-quick1' 'qt5-tools' 'qt5-quickcontrols')
+depends=('qt5-tools' 'qt5-declarative' 'qt5-script' 'qt5-quickcontrols' 'qt5-webkit')
 makedepends=('git' 'clang')
 options=('docs')
-optdepends=('qt5-doc: for the integrated Qt documentation'
-            'gdb: for the debugger'
-            'cmake: for cmake project support'
-            'openssh-askpass: for ssh support'
-            'git: for git support'
-            'mercurial: for mercurial support'
-            'bzr: for bazaar support'
+optdepends=('qt5-doc: integrated Qt documentation'
+            'qt5-examples: welcome page examples'
+            'gdb: debugger'
+            'cmake: cmake project support'
+            'openssh-askpass: ssh support'
+            'git: git support'
+            'mercurial: mercurial support'
+            'bzr: bazaar support'
             'clang: Clang code model')
 install=qtcreator.install
 source=("git://code.qt.io/qt-creator/qt-creator.git#tag=${_pkgver}"
@@ -43,6 +44,12 @@ prepare() {
   cd qt-creator
   git submodule init
   git config submodule.qbs.url $srcdir/qbs
+
+  # Debugger: Allow LLDB-MI to be used as debugger
+  # https://bugreports.qt.io/browse/QTCREATORBUG-15131
+  # https://code.qt.io/cgit/qt-creator/qt-creator.git/commit/?id=97e9f113879c
+  # https://code.qt.io/cgit/qt-creator/qt-creator.git/commit/?id=e57b0db0f959
+  git cherry-pick -n 97e9f113879c e57b0db0f959
   git submodule update
 
   git apply ../0001-Fix-Allow-qt-creator-to-build-on-arm-aarch32-and-aar.patch
@@ -52,7 +59,7 @@ build() {
   [[ -d build ]] && rm -r build
   mkdir build && cd build
 
-  LLVM_INSTALL_DIR=/usr qmake -r ../qt-creator/qtcreator.pro
+  LLVM_INSTALL_DIR=/usr qmake CONFIG+=journald -r ../qt-creator/qtcreator.pro
   make
   make docs -j1
 }

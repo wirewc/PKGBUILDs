@@ -13,13 +13,15 @@
 #  - adjust doc package to use linux-${_DOC_ARCH}-normal-zero-release instead of normal-server-release
 #  - patch for zero
 
+buildarch=22
+
 # Package 'openjfx' must be updated when this one is
 pkgname=('jre8-openjdk-headless' 'jre8-openjdk' 'jdk8-openjdk' 'openjdk8-src' 'openjdk8-doc')
 pkgbase=java8-openjdk
 _java_ver=8
-# http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-_jdk_update=51
-_jdk_build=16
+# Found @ http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+_jdk_update=77
+_jdk_build=03
 pkgver=${_java_ver}.u${_jdk_update}
 _repo_ver=jdk${_java_ver}u${_jdk_update}-b${_jdk_build}
 pkgrel=1
@@ -38,22 +40,14 @@ source=(jdk8u-${_repo_ver}.tar.gz::${_url_src}/archive/${_repo_ver}.tar.gz
         jaxp-${_repo_ver}.tar.gz::${_url_src}/jaxp/archive/${_repo_ver}.tar.gz
         langtools-${_repo_ver}.tar.gz::${_url_src}/langtools/archive/${_repo_ver}.tar.gz
         nashorn-${_repo_ver}.tar.gz::${_url_src}/nashorn/archive/${_repo_ver}.tar.gz
-        JDK-8074312-hotspot.patch
-        JVM_fastdebug_build_compiled_with_GCC_5_asserts_with_widen_increases.patch
-        zero-interpreter-fix.patch
         rhbz1206656_fix_current_stack_pointer.patch)
-
-sha256sums=('02eab2b937ed83c4505e93f58ad0b84a4e1a69e6d0baa4d041ec09ed98f18c2d'
-            '00d783dda3a7d87eb55a72febe7666c4b3297616ef3f11bbd679a05f19a81825'
-            'a7236d5e5824cea20b48ca4efb8e5109007024af9b85214e9153c4d633665d0a'
-            'f7554dc2fba5dfd36af0ed618ebe4c7b1527b5a067052299a1679a4142bbbeee'
-            'aa202ddf3bcc1dc54723bb26c0ae5ccaefc1693647e6b463955065d2b1720382'
-            '5d6faf6c726392212659cebd93fdbf89a11b86bab60f5b220493d9d8e7ff0686'
-            '3171ec4dbd96747eeb876a8fd3caf1e1e52da3dc91b63308193c914a5501d6e4'
-            'ffdd0446fce7b624f2cdc80297b99eecfdf30adfee39d3b8832a78c1dc202636'
-            '95fbd155806cac22de9e6df6f4f92ae79530f86d63cea1deaf98e607953e0b50'
-            '8df4d5d78753ebc5bc425fd1c8fe788106ac8b9d3155feb162a748a96c81cc05'
-            'ed2968406c6b05e7438a0ed7cb2b6041ddce369cbcedff11fd7563c8350e0e67'
+sha256sums=('4de7ac9e083b577c61b861660e1883c8e3d36024860ac95390fe5113cd51aa85'
+            '8e556b9cb8321a1007894358405365f43a5138e04647436aea2dabd4457a5c11'
+            '166058d86a5f078094f6de2ba534b28837124bcc7688b72c67dc3b6beb41a013'
+            '3c0bcc0afda1f4bb27ae8f15ed5ebaafc7ce90e9d304e3cb53e202ac911a8de5'
+            '240313419da136cac61293ff867568fd4342faff1d66688af66d4fd0d45047c4'
+            'f671cdb170bd50681d1c97051740b69952764d3eda17a5d1523a0a830ab401ab'
+            '40d450dc4a1799a0d913af40b97ad22bd713974f29f2b4bcc4fbfae2c1dc3412'
             '85d396e1663514390e73b0b072a5f93c51ca6e324ee0a08aa2ace599e3df83bf')
 
 case "${CARCH}" in
@@ -80,13 +74,6 @@ prepare() {
   done
 
   cd "${srcdir}/hotspot-${_repo_ver}"
-  # https://bugs.openjdk.java.net/browse/JDK-8074312
-  patch -p1 < "${srcdir}"/JDK-8074312-hotspot.patch
-  # https://bugs.archlinux.org/task/45386
-  # https://bugs.openjdk.java.net/browse/JDK-8078666
-  patch -p1 < "${srcdir}"/JVM_fastdebug_build_compiled_with_GCC_5_asserts_with_widen_increases.patch
-
-  patch -p2 -i ../zero-interpreter-fix.patch
   patch -p2 -i ../rhbz1206656_fix_current_stack_pointer.patch
 }
 

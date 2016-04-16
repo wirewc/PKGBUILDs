@@ -7,35 +7,35 @@
 #  - removed numactl dependency
 
 pkgname=fio
-pkgver=2.2.9
+pkgver=2.8
 pkgrel=1
 pkgdesc='Scriptable I/O tool for storage benchmarks and drive testing'
 arch=(i686 x86_64)
 url='https://github.com/axboe/fio'
 license=(GPL2)
-depends=(bash libaio python2)
+# TODO: enable rdma, need to move the libraries from AUR
+depends=(bash libaio python2 glusterfs ceph)
 makedepends=(gtk2)
 optdepends=(
   'gtk2: for gfio - fio GUI frontend' 
   'gnuplot: generating plots using fio_generate_plots'
 )
-source=(http://brick.kernel.dk/snaps/fio-$pkgver.tar.bz2)
-sha256sums=('c881d9cf15500bd4436970d0467c356c5c021417131587931ba78845e965bf56')
+source=(https://github.com/axboe/fio/archive/fio-$pkgver.zip)
+sha256sums=('f83ef5b8f6d0548ae652ee8e36644e9a969a3f333156567903bf00f5c9b00ff1')
 
 prepare() {
-  cd fio-$pkgver
+  cd fio-fio-$pkgver
 
-  sed -e 's|#!/usr/bin/env python|#!/usr/bin/env python2|' -i tools/plot/fio2gnuplot 
+  sed -e 's|#!/usr/bin/env python|#!/usr/bin/env python2|' -i tools/plot/fio2gnuplot
 }
 
-# TODO: enable rdma, need to move the libraries from AUR
 build() {
-  cd fio-$pkgver
+  cd fio-fio-$pkgver
   ./configure --enable-gfio --extra-cflags="$CFLAGS"
 }
 
 package() {
-  cd fio-$pkgver
+  cd fio-fio-$pkgver
   make DESTDIR="$pkgdir" prefix=/usr mandir=/usr/share/man install
 
   # documentation

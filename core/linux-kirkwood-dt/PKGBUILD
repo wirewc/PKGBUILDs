@@ -6,14 +6,15 @@ buildarch=2
 pkgbase=linux-kirkwood-dt
 _kernelname=${pkgbase#linux}
 _desc="Marvell Kirkwood DT"
-pkgver=4.1.3
+pkgver=4.5.1
+srcver=${pkgver%.0}
 pkgrel=1
-cryptodev_commit=da730106c2558c8e0c8e1b1b1812d32ef9574ab7
-bfqver=v7r8
+cryptodev_commit=bc67142c57eadc0aafd0323ec527849012786643
+bfqver=v7r11
 
 ### BFQ patch kernel version
-bfqkern=${pkgver:0:3}
-# bfqkern=4.0
+# bfqkern=${pkgver:0:3}
+bfqkern=4.4
 
 ### AUFS branch name
 aufsbranch="aufs${pkgver:0:3}"
@@ -25,65 +26,55 @@ license=('GPL2')
 makedepends=('xmlto' 'docbook-xsl' 'uboot-mkimage' 'kmod' 'inetutils' 'bc' 'git')
 options=('!strip')
 
-source=("https://kernel.org/pub/linux/kernel/v4.x/linux-${pkgver}.tar.xz"
+source=("https://kernel.org/pub/linux/kernel/v4.x/linux-${srcver}.tar.xz"
         'config'
         'archlinuxarm.patch'
-        'usb-add-reset-resume-quirk-for-several-webcams.patch'
 	'0001-disable-mv643xx_eth-TSO.patch'
         "git+https://github.com/sfjro/aufs4-standalone.git#branch=${aufsbranch}"
         "cryptodev-${cryptodev_commit}.tar.gz::https://github.com/cryptodev-linux/cryptodev-linux/archive/${cryptodev_commit}.tar.gz"
-        "ftp://teambelgium.net/bfq/patches/${bfqkern}.0-${bfqver}/0001-block-cgroups-kconfig-build-bits-for-BFQ-${bfqver}-${bfqkern}.patch"
-        "ftp://teambelgium.net/bfq/patches/${bfqkern}.0-${bfqver}/0002-block-introduce-the-BFQ-${bfqver}-I-O-sched-for-${bfqkern}.patch"
-        "ftp://teambelgium.net/bfq/patches/${bfqkern}.0-${bfqver}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-${bfqver}-for-${bfqkern}.0.patch"
+        "ftp://teambelgium.net/bfq/patches/${bfqkern}.0-${bfqver}/0001-block-cgroups-kconfig-build-bits-for-BFQ-${bfqver}-${bfqkern}.0.patch"
+        "ftp://teambelgium.net/bfq/patches/${bfqkern}.0-${bfqver}/0002-block-introduce-the-BFQ-${bfqver}-I-O-sched-for-${bfqkern}.0.patch"
+        "ftp://teambelgium.net/bfq/patches/${bfqkern}.0-${bfqver}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-${bfqver}-for.patch"
         'goflexhome_fdt.patch'
-        'pogoplugv4_fdt.patch'
-        'nsa325_fdt.patch')
+        'linux.preset')
 
-md5sums=('96c2c77b1c54ba01cfd8fc2d13fbf828'
-         '59c1198dab299c87ac80acb8c3139588'
-         'ed6ea949989ccfd47e35349856a4fd27'
-         '9b5a265440abf57d2052838f31486a3a'
+md5sums=('488fac47d1c73e8a21ac71f7f3121009'
+         '7acee3b15e2942600e335c1257be8a26'
+         '190c3ba09aa63ddfc914e404ad56a969'
          '09d44b9f07abfaeaf4f688ee52034786'
          'SKIP'
-         '8fb4d3b7cc970351f3b5078b7893a107'
-         '74bf103542cbdee0363819309adb97a2'
-         'f09baae3c7add4ed9bedde22ae3efe19'
-         'bd8cc19a31d1cf8aeeaf9245057c4f9b'
+         '2c8ecae91223868decdf37b8a76489b7'
+         'c1d7fcfe88edb658375089c0a9cc1811'
+         '953133d5e387de2ad79ac0ae5c27cb6b'
+         'f0387e673975e9f2a5e05136948edece'
          'ce1975f40c48ec1b08dd09447ab043ca'
-         '7efecf23dbebc1ee2e2ccb527c8579c0'
-         '864fe1862e6cee4f6e213c0caf0338fa')
+         '959e49540dac4c5e689ad9037150a360')
 
 prepare() {
-  cd "${srcdir}/linux-${pkgver}"
+  cd "${srcdir}/linux-${srcver}"
 
-msg2 "Copying aufs patches into the kernel source tree"
-  cp -ru "${srcdir}/aufs4-standalone/"{Documentation,fs} "${srcdir}/linux-${pkgver}/"
-  cp -ru "${srcdir}/aufs4-standalone/include/uapi/linux/aufs_type.h" "${srcdir}/linux-${pkgver}/include/"{linux/,uapi/linux/}
+  msg2 "Copying aufs patches into the kernel source tree"
+  cp -ru "${srcdir}/aufs4-standalone/"{Documentation,fs} "${srcdir}/linux-${srcver}/"
+  cp -ru "${srcdir}/aufs4-standalone/include/uapi/linux/aufs_type.h" "${srcdir}/linux-${srcver}/include/"{linux/,uapi/linux/}
 
-msg2 "Applying aufs patches"
+  msg2 "Applying aufs patches"
   patch -Np1 -i ../aufs4-standalone/aufs4-kbuild.patch
   patch -Np1 -i ../aufs4-standalone/aufs4-base.patch
   patch -Np1 -i ../aufs4-standalone/aufs4-mmap.patch
   patch -Np1 -i ../aufs4-standalone/aufs4-standalone.patch
 
-msg2 "Disable buggy TCP segmentation offload implementation"
-msg2 "http://archlinuxarm.org/forum/viewtopic.php?f=9&t=7692"
+  msg2 "Disable buggy TCP segmentation offload implementation"
+  msg2 "http://archlinuxarm.org/forum/viewtopic.php?f=9&t=7692"
   patch -Np1 -i ${srcdir}/0001-disable-mv643xx_eth-TSO.patch
 
-msg2 "Add the USB_QUIRK_RESET_RESUME for several webcams"
-  # FS#26528
-  patch -Np1 -i "${srcdir}/usb-add-reset-resume-quirk-for-several-webcams.patch"
-
-msg2 "Add Arch Linux ARM patch for ARMv5te plug computers"
+  msg2 "Add Arch Linux ARM patch for ARMv5te plug computers"
   patch -Np1 -i "${srcdir}/archlinuxarm.patch"
   patch -Np1 -i "${srcdir}/goflexhome_fdt.patch"
-  patch -Np1 -i "${srcdir}/pogoplugv4_fdt.patch"
-  patch -Np1 -i "${srcdir}/nsa325_fdt.patch"
 
-msg2 "Add BFQ patches"
-  patch -Np1 -i "${srcdir}/0001-block-cgroups-kconfig-build-bits-for-BFQ-${bfqver}-${bfqkern}.patch"
-  patch -Np1 -i "${srcdir}/0002-block-introduce-the-BFQ-${bfqver}-I-O-sched-for-${bfqkern}.patch"
-  patch -Np1 -i "${srcdir}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-${bfqver}-for-${bfqkern}.0.patch"
+  msg2 "Add BFQ patches"
+  patch -Np1 -i "${srcdir}/0001-block-cgroups-kconfig-build-bits-for-BFQ-${bfqver}-${bfqkern}.0.patch"
+  patch -Np1 -i "${srcdir}/0002-block-introduce-the-BFQ-${bfqver}-I-O-sched-for-${bfqkern}.0.patch"
+  patch -Np1 -i "${srcdir}/0003-block-bfq-add-Early-Queue-Merge-EQM-to-BFQ-${bfqver}-for.patch"
 
   cat "${srcdir}/config" > ./.config
 
@@ -95,7 +86,7 @@ msg2 "Add BFQ patches"
 }
 
 build() {
-  cd "${srcdir}/linux-${pkgver}"
+  cd "${srcdir}/linux-${srcver}"
 
   # get kernel version
   make prepare
@@ -120,12 +111,12 @@ build() {
 
   #yes "" | make config
 
-msg "Building!"
+  msg "Building!"
   make ${MAKEFLAGS} zImage modules dtbs kirkwood-nsa320.dtb kirkwood-nsa325.dtb
 
-msg "Building cryptodev module"
+  msg "Building cryptodev module"
   cd "${srcdir}/cryptodev-linux-${cryptodev_commit}"
-  make KERNEL_DIR="${srcdir}/linux-${pkgver}"
+  make KERNEL_DIR="${srcdir}/linux-${srcver}"
 }
 
 _package() {
@@ -134,9 +125,10 @@ _package() {
   optdepends=('crda: to set the correct wireless channels of your country')
   provides=('kernel26' 'linux=${pkgver}' 'aufs_friendly' 'cryptodev_friendly')
   conflicts=('linux-kirkwood' 'linux' 'linux-olinuxino')
+  backup=("etc/mkinitcpio.d/${pkgbase}.preset")
   install=${pkgname}.install
 
-  cd "${srcdir}/linux-${pkgver}"
+  cd "${srcdir}/linux-${srcver}"
 
   KARCH=arm
 
@@ -157,6 +149,13 @@ _package() {
     -e  "s/KERNEL_VERSION=.*/KERNEL_VERSION=${_kernver}/g" \
     -i "${startdir}/${pkgname}.install"
 
+  # install mkinitcpio preset file for kernel
+  install -D -m644 "${srcdir}/linux.preset" "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
+  sed \
+    -e "1s|'linux.*'|'${pkgbase}'|" \
+    -e "s|ALL_kver=.*|ALL_kver=\"${_kernver}\"|" \
+    -i "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
+
   # remove build and source links
   rm -f "${pkgdir}"/lib/modules/${_kernver}/{source,build}
   # remove the firmware
@@ -171,9 +170,9 @@ _package() {
 
   # install cryptodev module
   cd "${srcdir}/cryptodev-linux-${cryptodev_commit}"
-  make -C "${srcdir}/linux-${pkgver}" INSTALL_MOD_PATH="${pkgdir}" SUBDIRS=`pwd` modules_install
+  make -C "${srcdir}/linux-${srcver}" INSTALL_MOD_PATH="${pkgdir}" SUBDIRS=`pwd` modules_install
 
-  cd "${srcdir}/linux-${pkgver}"
+  cd "${srcdir}/linux-${srcver}"
 
   # Now we call depmod...
   depmod -b "$pkgdir" -F System.map "$_kernver"
@@ -194,7 +193,7 @@ _package-headers() {
   cd "${pkgdir}/usr/lib/modules/${_kernver}"
   ln -sf ../../../src/linux-${_kernver} build
 
-  cd "${srcdir}/linux-${pkgver}"
+  cd "${srcdir}/linux-${srcver}"
   install -D -m644 Makefile \
     "${pkgdir}/usr/src/linux-${_kernver}/Makefile"
   install -D -m644 kernel/Makefile \
@@ -212,8 +211,6 @@ _package-headers() {
   # copy arch includes for external modules
   mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/arch/$KARCH
   cp -a arch/$KARCH/include ${pkgdir}/usr/src/linux-${_kernver}/arch/$KARCH/
-  mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/arch/$KARCH/mach-mvebu
-  cp -a arch/$KARCH/mach-mvebu/include ${pkgdir}/usr/src/linux-${_kernver}/arch/$KARCH/mach-mvebu/
   mkdir -p ${pkgdir}/usr/src/linux-${_kernver}/arch/$KARCH/plat-orion
   cp -a arch/$KARCH/plat-orion/include ${pkgdir}/usr/src/linux-${_kernver}/arch/$KARCH/plat-orion/
 

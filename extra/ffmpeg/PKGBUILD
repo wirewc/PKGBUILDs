@@ -1,7 +1,7 @@
 # $Id$
-# Maintainer:  Ionut Biru <ibiru@archlinux.org>
-# Maintainer:  Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
-# Maintainer:  Maxime Gauduin <alucryd@archlinux.org>
+# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Tom Newsom <Jeepster@gmx.co.uk>
 # Contributor: Paul Mattal <paul@archlinux.org>
 
@@ -9,39 +9,37 @@
 #  - use -fPIC in host cflags for armv7 to fix print_options.c compile
 
 pkgname=ffmpeg
-pkgver=2.7.2
-pkgrel=2
+pkgver=3.0.1
+pkgrel=1
 epoch=1
-pkgdesc='Complete and free Internet live audio and video broadcasting solution'
+pkgdesc='Complete solution to record, convert and stream audio and video'
 arch=('i686' 'x86_64')
 url='http://ffmpeg.org/'
-license=('GPL')
-depends=(
-      'alsa-lib' 'bzip2' 'fontconfig' 'fribidi' 'gnutls' 'gsm' 'lame' 'libass'
-      'libbluray' 'libmodplug' 'libpulse' 'libsoxr' 'libssh' 'libtheora'
-      'libva' 'libvdpau' 'libwebp' 'opencore-amr' 'openjpeg' 'opus'
-      'schroedinger' 'sdl' 'speex' 'v4l-utils' 'xvidcore' 'zlib'
-      'sdl' 'speex' 'v4l-utils' 'xvidcore' 'zlib'
-      'libvorbis.so' 'libvorbisenc.so' 'libvpx.so' 'libx264.so' 'libx265.so'
-)
-makedepends=('hardening-wrapper' 'libvdpau' 'yasm')
-provides=(
-      'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so'
-      'libavresample.so' 'libavutil.so' 'libpostproc.so' 'libswresample.so'
-      'libswscale.so'
-)
-source=(http://ffmpeg.org/releases/$pkgname-$pkgver.tar.bz2{,.asc})
-validpgpkeys=('FCF986EA15E6E293A5644F10B4322F04D67658D8') # ffmpeg-devel
-md5sums=('7eb2140bab9f0a8669b65b50c8e4cfb5'
-         'SKIP')
+license=('GPL3')
+depends=('alsa-lib' 'bzip2' 'fontconfig' 'fribidi' 'gnutls' 'gsm' 'lame'
+         'libass' 'libavc1394' 'libbluray' 'libiec61883' 'libmodplug'
+         'libpulse' 'libsoxr' 'libssh' 'libtheora' 'libva' 'libvdpau' 'libwebp'
+         'opencore-amr' 'openjpeg' 'opus' 'schroedinger' 'sdl' 'speex'
+         'v4l-utils' 'xvidcore' 'zlib'
+         'libdcadec.so' 'libvidstab.so' 'libvorbis.so' 'libvorbisenc.so'
+         'libvpx.so' 'libx264.so' 'libx265.so')
+makedepends=('hardening-wrapper' 'ladspa' 'libvdpau' 'yasm')
+optdepends=('ladspa: LADSPA filters')
+provides=('libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so'
+          'libavresample.so' 'libavutil.so' 'libpostproc.so' 'libswresample.so'
+          'libswscale.so')
+source=(http://ffmpeg.org/releases/ffmpeg-${pkgver}.tar.bz2{,.asc})
+validpgpkeys=('FCF986EA15E6E293A5644F10B4322F04D67658D8')
+sha256sums=('f7f7052c120f494dd501f96becff9b5a4ae10cfbde97bc2f1e9f0fd6613a4984'
+            'SKIP')
 
 build() {
-  cd $pkgname-$pkgver
+  cd ffmpeg-${pkgver}
 
   [[ $CARCH == "armv7h" || $CARCH == "aarch64" ]] && CONFIG='--host-cflags="-fPIC"'
 
   ./configure \
-    --prefix=/usr \
+    --prefix='/usr' \
     --disable-debug \
     --disable-static \
     --disable-stripping \
@@ -50,11 +48,14 @@ build() {
     --enable-fontconfig \
     --enable-gnutls \
     --enable-gpl \
+    --enable-ladspa \
     --enable-libass \
     --enable-libbluray \
+    --enable-libdcadec \
     --enable-libfreetype \
     --enable-libfribidi \
     --enable-libgsm \
+    --enable-libiec61883 \
     --enable-libmodplug \
     --enable-libmp3lame \
     --enable-libopencore_amrnb \
@@ -68,6 +69,7 @@ build() {
     --enable-libssh \
     --enable-libtheora \
     --enable-libv4l2 \
+    --enable-libvidstab \
     --enable-libvorbis \
     --enable-libvpx \
     --enable-libwebp \
@@ -85,7 +87,10 @@ build() {
 }
 
 package() {
-  cd $pkgname-$pkgver
-  make DESTDIR="$pkgdir" install install-man
-  install -Dm755 tools/qt-faststart "$pkgdir"/usr/bin/qt-faststart
+  cd ffmpeg-${pkgver}
+
+  make DESTDIR="${pkgdir}" install install-man
+  install -Dm 755 tools/qt-faststart "${pkgdir}"/usr/bin/
 }
+
+# vim: ts=2 sw=2 et:

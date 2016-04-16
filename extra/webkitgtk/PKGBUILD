@@ -6,9 +6,11 @@
 #  - use --disable-gtk-doc to solve html docs breaking the build
 #  - AArch64 fixes
 
+highmem=1
+
 pkgbase=webkitgtk
 pkgname=(webkitgtk webkitgtk2)
-pkgver=2.4.9
+pkgver=2.4.11
 pkgrel=1
 pkgdesc="GTK+ Web content engine library"
 arch=(i686 x86_64)
@@ -21,12 +23,8 @@ optdepends=('gst-plugins-base: free media decoding'
             'gst-plugins-good: media decoding'
             'gst-libav: nonfree media decoding')
 options=(!emptydirs)
-source=(http://webkitgtk.org/releases/$pkgbase-${pkgver}.tar.xz
-        webkitgtk-aarch64.patch
-        webkitgtk-2.4.1-ppc64_align.patch)
-sha256sums=('afdf29e7828816cad0be2604cf19421e96d96bf493987328ffc8813bb20ac564'
-            '362c66145e3a7978cd612d1a838be7b556d31bb4c51f9ffe12054b5c91b08a73'
-            '62fb5f50c0fca6fbb598a93078d2b8882d5ecb78bbc22c7040f57e676e8d433f')
+source=(http://webkitgtk.org/releases/$pkgbase-${pkgver}.tar.xz)
+sha256sums=('588aea051bfbacced27fdfe0335a957dca839ebe36aa548df39c7bbafdb65bf7')
 
 prepare() {
   mkdir build-gtk{,2} path
@@ -34,9 +32,7 @@ prepare() {
 
   # AArch64 fixes
   cd $pkgbase-$pkgver
-  patch -p1 -i ../webkitgtk-aarch64.patch
   if [[ $CARCH == "aarch64" ]]; then
-    patch -p1 -i ../webkitgtk-2.4.1-ppc64_align.patch
     CFLAGS+=" -DENABLE_YARR_JIT=0"
     CXXFLAGS+=" -DENABLE_YARR_JIT=0"
   fi
